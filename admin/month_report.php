@@ -1,41 +1,41 @@
 
 
-<?PHP
-//set_time_limit(300);
+<?php
 include 'connection.php';
 
+// Initialize the search parameters
+$search_year = isset($_GET['search_year']) ? $_GET['search_year'] : '';
+$search_month = isset($_GET['search_month']) ? $_GET['search_month'] : '';
 
+// Combine year and month into the required format (YYYYMM)
+$search_month_formatted = '';
+if (!empty($search_year) && !empty($search_month)) {
+    $search_month_formatted = $search_year . str_pad($search_month, 2, '0', STR_PAD_LEFT);
+}
 
-// $sql = "SELECT *
-// FROM V_TOTAL_REG_sum";
+// Modify the SQL query to include a WHERE clause if a search month is provided
+$sql = "SELECT * FROM MIS_monthly_COLLECTION";
+if (!empty($search_month_formatted)) {
+    $sql .= " WHERE MONTH = :search_month";
+}
 
+$parse = oci_parse($conn, $sql);
 
-$sql = "SELECT *
-FROM MIS_monthly_COLLECTION ";
+// Bind the search parameter if it exists
+if (!empty($search_month_formatted)) {
+    oci_bind_by_name($parse, ':search_month', $search_month_formatted);
+}
 
-$parse = ociparse($conn, $sql);
 oci_execute($parse);
 
-// print_r($sql);
+$user_row = [];
 while ($row = oci_fetch_assoc($parse)) {
     $user_row[] = $row;
 }
 
-// var_dump($division);
-// echo count($division);
 oci_free_statement($parse);
-
-
-
-
-// $TRX_ID =  $report_output[0]['TRX_ID'];
-// echo "$TRX_ID";
-
-
-/* End Procedure for Report */
-// $bool = true;
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -101,6 +101,8 @@ oci_free_statement($parse);
 
 <body id="page-top">
 
+
+
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -130,6 +132,33 @@ oci_free_statement($parse);
                             href="https://datatables.net">official DataTables documentation</a>.</p> -->
 
                     <!-- DataTales Example -->
+                    <div class="row mb-4">
+    <div class="col-md-6">
+        <form method="GET" action="">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search_year" placeholder="Enter Year (e.g., 2024)" value="<?php echo htmlspecialchars($search_year); ?>">
+                <select class="form-control" name="search_month">
+                    <option value="">Select Month</option>
+                    <option value="01" <?php if ($search_month == '01') echo 'selected'; ?>>January</option>
+                    <option value="02" <?php if ($search_month == '02') echo 'selected'; ?>>February</option>
+                    <option value="03" <?php if ($search_month == '03') echo 'selected'; ?>>March</option>
+                    <option value="04" <?php if ($search_month == '04') echo 'selected'; ?>>April</option>
+                    <option value="05" <?php if ($search_month == '05') echo 'selected'; ?>>May</option>
+                    <option value="06" <?php if ($search_month == '06') echo 'selected'; ?>>June</option>
+                    <option value="07" <?php if ($search_month == '07') echo 'selected'; ?>>July</option>
+                    <option value="08" <?php if ($search_month == '08') echo 'selected'; ?>>August</option>
+                    <option value="09" <?php if ($search_month == '09') echo 'selected'; ?>>September</option>
+                    <option value="10" <?php if ($search_month == '10') echo 'selected'; ?>>October</option>
+                    <option value="11" <?php if ($search_month == '11') echo 'selected'; ?>>November</option>
+                    <option value="12" <?php if ($search_month == '12') echo 'selected'; ?>>December</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-primary ml-2 rounded" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3" style="background-color: #8468F4;;">
                             <!-- <h6 class="m-0 font-weight-bold text-primary text-center m-4">Suhrawardy Hall Alumni Association, BUET</h6> -->
@@ -462,15 +491,54 @@ oci_free_statement($parse);
 
 
     <script>
-        $(document).ready(function() {
-            $('#table_id').DataTable({
-                dom: 'lBfrtip',
-                buttons: [
-                    'excel'
-                ]
-            });
+    $(document).ready(function() {
+        $('#table_id').DataTable({
+            dom: 'lBfrtip',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export to Excel',
+                    title: function() {
+                        // Get the year and month values from the form
+                        var year = $('input[name="search_year"]').val(); // Year input
+                        var month = $('select[name="search_month"]').val(); // Month select
+
+                        // Format month as full name if available
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        var monthName = month ? monthNames[parseInt(month) - 1] : ''; // Display the full month name
+
+                        // Return the title with year and month
+                        return 'Report For ' + (monthName ? monthName + ' ' : '') + (year || new Date().getFullYear());
+                    },
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        // Set the header in F2 cell
+                        var row = $('row', sheet).eq(1); // Get the second row (1-based index)
+                        var cell = $('c[r="F2"]', row); // Target F2 cell (F column, 2nd row)
+
+                        // Set the text for the F2 cell with year and month
+                        var year = $('input[name="search_year"]').val(); // Get the year from the input
+                        var month = $('select[name="search_month"]').val(); // Get the month from the select
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        var monthName = month ? monthNames[parseInt(month) - 1] : ''; // Get the month name
+                        var headerText = 'Report For ' + (monthName ? monthName + ' ' : '') + (year || new Date().getFullYear());
+
+                        // Set the header text and styling
+                        cell.text(headerText); // Set the text for the header
+                        cell.attr('s', '64'); // Excel style for bold + center alignment
+                        cell.css({
+                            'text-align': 'center', // Center text horizontally
+                            'font-weight': 'bold',  // Make the text bold
+                            'font-size': '14pt',    // Adjust font size
+                            'vertical-align': 'middle' // Vertically center the text in the cell
+                        });
+                    }
+                }
+            ]
         });
-    </script>
+    });
+</script>
 
 </body>
 

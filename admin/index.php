@@ -6,7 +6,7 @@
          $user_name = $_POST['user_name'];
          $user_password = $_POST['user_password'];
 
-         $sql = "SELECT USER_NAME,USER_PASSWORD FROM SM_USER_MST WHERE USER_NAME = '$user_name' AND USER_PASSWORD = '$user_password' ";
+         $sql = "SELECT USER_NAME,USER_PASSWORD FROM AD_USER_MST WHERE USER_NAME = '$user_name' AND USER_PASSWORD = '$user_password' ";
          $result = ociparse($conn, $sql);
          ociexecute($result);
          if($user_row = oci_fetch_assoc($result)){
@@ -18,7 +18,7 @@
                 $_SESSION['user']=$user_row['USER_NAME'];
                 //$id = $_SESSION['id'];
         
-                header('Location:report_list.php');
+                header('Location:dashboard.php');
             }
          }
         
@@ -250,7 +250,7 @@
         <div class="login-wrap" >
             <div class="login-html">
                 <div class="image-holder" style="margin-top: 30px;">
-                    <img src="img/social_welfare.jpg" alt="logo" width="80px" height="80px">
+                    <img src="img/bgfsclogo.jpeg" alt="logo" width="80px" height="80px">
                 </div>
                 <div class="login-form">
                     

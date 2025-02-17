@@ -1,41 +1,39 @@
 
-
-<?PHP
-//set_time_limit(300);
+<?php
 include 'connection.php';
 
+// Initialize the search parameter
+$search_year = isset($_GET['search_year']) ? $_GET['search_year'] : '';
 
+// Modify the SQL query to include a WHERE clause if a search year is provided
+$sql = "SELECT * FROM MIS_YEARLY_COLLECTION";
+if (!empty($search_year)) {
+    $sql .= " WHERE SUBSTR(TO_CHAR(MONTH), 1, 4) = :search_year";
+}
 
-// $sql = "SELECT *
-// FROM V_TOTAL_REG_sum";
+$parse = oci_parse($conn, $sql);
 
+// Bind the search parameter if it exists
+if (!empty($search_year)) {
+    oci_bind_by_name($parse, ':search_year', $search_year);
+}
 
-$sql = "SELECT *
-FROM MIS_YEARLY_COLLECTION ";
-
-$parse = ociparse($conn, $sql);
 oci_execute($parse);
 
-// print_r($sql);
+$user_row = [];
 while ($row = oci_fetch_assoc($parse)) {
     $user_row[] = $row;
 }
 
-// var_dump($division);
-// echo count($division);
 oci_free_statement($parse);
-
-
-
-
-// $TRX_ID =  $report_output[0]['TRX_ID'];
-// echo "$TRX_ID";
-
-
-/* End Procedure for Report */
-// $bool = true;
-
 ?>
+
+
+
+
+
+
+
 
 
 <!DOCTYPE html>
@@ -130,6 +128,22 @@ oci_free_statement($parse);
                             href="https://datatables.net">official DataTables documentation</a>.</p> -->
 
                     <!-- DataTales Example -->
+
+
+                    <div class="row mb-4">
+    <div class="col-md-6">
+        <form method="GET" action="">
+            <div class="input-group">
+                <input type="text" class="form-control" id="year_input" name="search_year" placeholder="Enter Year (e.g., 2024)" value="<?php echo htmlspecialchars($search_year); ?>">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
                     <div class="card shadow mb-4">
                         <div class="card-header py-3" style="background-color: #8468F4;;">
                             <!-- <h6 class="m-0 font-weight-bold text-primary text-center m-4">Suhrawardy Hall Alumni Association, BUET</h6> -->
@@ -455,15 +469,41 @@ oci_free_statement($parse);
 
 
     <script>
-        $(document).ready(function() {
-            $('#table_id').DataTable({
-                dom: 'lBfrtip',
-                buttons: [
-                    'excel'
-                ]
-            });
+    $(document).ready(function() {
+        $('#table_id').DataTable({
+            dom: 'lBfrtip',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export to Excel',
+                    title: function() {
+                        var year = $('#year_input').val(); // Input theke year nite hobe
+                        return 'YEAR - ' + (year || new Date().getFullYear()); // Default year hisebe current year dekhabe
+                    },
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        
+                        // A1 cell header ke customize kora
+                        var header = $('row c[r="A1"]', sheet); // A1 cell reference
+                        
+                        // Set bold and center alignment for the header
+                        header.attr('s', '64'); // Excel style 64 for bold + center
+                        header.css({
+                            'text-align': 'center', // Center text horizontally
+                            'font-weight': 'bold',  // Make the text bold
+                            'font-size': '24pt',    // Optional: Adjust the font size if needed
+                            'vertical-align': 'center' // Vertically center the text in the cell
+                        });
+                    }
+                }
+            ]
         });
-    </script>
+    });
+</script>
+
+
+
+
 
 </body>
 
