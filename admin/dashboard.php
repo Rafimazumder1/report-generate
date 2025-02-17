@@ -7,11 +7,11 @@
             <a class="text-center" href="">
                 <div class="sidebar-brand-icon ">
                 <img class="  mt-2"
-                     src="img/social_welfare.jpg"  alt="" height="80px" width="80px">
+                     src="img/bgfsclogo.jpeg"  alt="" height="80px" width="80px">
                 </div>
                 <div class="sidebar-brand-text mt-2">
                     <p style="font-weight: bold;font-size: 14px;color: white;">
-                    SOCIAL WELFARE ALUMNI ASSOCIATION
+                    Bangladesh Gas Fields School & College
                     </p>
                     
                 </div>
@@ -22,7 +22,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="report_dash.php">
+                <a class="nav-link" href="">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -37,11 +37,14 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>REUNION 2024</span>
+                    <span>Collection Report</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="report_list.php">Registration List </a>
+                        <a class="collapse-item" href="report_list.php">Student Wise Report </a>
+                        <a class="collapse-item" href="report_list.php">Class Wise Report </a>
+                        <a class="collapse-item" href="month_report.php">Monthly Report </a>
+                        <a class="collapse-item" href="yearly_report.php">Yearly Report </a>
                         
                     </div>
                 </div>

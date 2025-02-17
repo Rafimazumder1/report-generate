@@ -11,7 +11,7 @@ include 'connection.php';
 
 
 $sql = "SELECT *
-FROM ";
+FROM MIS_YEARLY_COLLECTION ";
 
 $parse = ociparse($conn, $sql);
 oci_execute($parse);
@@ -49,8 +49,8 @@ oci_free_statement($parse);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SOCIAL WELFARE ALUMNI ASSOCIATION </title>
-    <link rel="icon" href="img/social_welfare.jpg" type="image/ico">
+    <title>Bangladesh Gas Fields School & College </title>
+    <link rel="icon" href="img/bgfsclogo.jpeg" type="image/ico">
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -133,9 +133,9 @@ oci_free_statement($parse);
                     <div class="card shadow mb-4">
                         <div class="card-header py-3" style="background-color: #8468F4;;">
                             <!-- <h6 class="m-0 font-weight-bold text-primary text-center m-4">Suhrawardy Hall Alumni Association, BUET</h6> -->
-                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Social Welfare Alumni Association</h4>
-                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Dhaka University</h4>
-                            <h6 class=" text-center m-4" style="color: white; font-weight: bold;">Reunion 2024</h6>
+                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Bangladesh Gas Fields School & College</h4>
+                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Birashar, Brahmanbaria</h4>
+                            <h6 class=" text-center m-4" style="color: white; font-weight: bold;">Yearly Collection Report</h6>
 
                         </div>
                         <div class="card-body">
@@ -144,32 +144,37 @@ oci_free_statement($parse);
                                     <thead style="color: #212121;">
                                         <tr>
                                             <th style="text-align: center;">Month</th>
-                                            <th style="text-align: center;">Admission Form Fee TK</th>
-                                            <th style="text-align: center;">Annual Magazine Fee TK</th>
-                                            <th style="text-align: center;">Automation Fee TK</th>
-                                            <th style="text-align: center;">Certification fee TK</th>
-                                            <th style="text-align: center;">Class Test Fee TK</th>
-                                            <th style="text-align: center;">Development Fee TK</th>
-                                            <th style="text-align: center;">Exam Fees TK</th>
-                                            <th style="text-align: center;">Form Fill-up Fee TK</th>
-                                            <th style="text-align: center;">Half-yearly TK</th>
-                                            <th style="text-align: center;">Identity Card Fee TK</th>
-                                            <th style="text-align: center;">Laboratory Fee TK</th>
-                                            <th style="text-align: center;">Milad Fee TK</th>
-                                            <th style="text-align: center;">Miscellaneous Fee TK</th>
-                                            <th style="text-align: center;">Monthly Fee TK</th>
-                                            <th style="text-align: center;">Penalty Fee TK</th>
-                                            <th style="text-align: center;">Poor Fund Fee TK</th>
-                                            <th style="text-align: center;">Pre-test TK</th>
-                                            <th style="text-align: center;">Registration Fee TK</th>
-                                            <th style="text-align: center;">Result Processing Fee TK</th>
-                                            <th style="text-align: center;">SMS Fee TK</th>
-                                            <th style="text-align: center;">Scout Fee TK</th>
-                                            <th style="text-align: center;">Sports Fee TK</th>
-                                            <th style="text-align: center;">Syllabus Fee TK</th>
-                                            <th style="text-align: center;">Testimonial Fee TK</th>
-
-                                            <th style="text-align: center;">action</th>
+                                            <th style="text-align: center;">ADMISSION_FEE</th>
+                                            <th style="text-align: center;">Admission Form Fee </th>
+                                            <th style="text-align: center;">Annual Magazine Fee </th>
+                                            <th style="text-align: center;">Automation Fee </th>
+                                            <th style="text-align: center;">Certification fee </th>
+                                            <th style="text-align: center;">Class Test Fee </th>
+                                            <th style="text-align: center;">Development Fee </th>
+                                            <th style="text-align: center;">Exam Fees </th>
+                                            <th style="text-align: center;">Form Fill-up Fee </th>
+                                            <th style="text-align: center;">Half-yearly </th>
+                                            <th style="text-align: center;">Identity Card Fee </th>
+                                            <th style="text-align: center;">Laboratory Fee </th>
+                                            <th style="text-align: center;">Milad Fee </th>
+                                            <th style="text-align: center;">Miscellaneous Fee </th>
+                                            <th style="text-align: center;">Monthly Fee </th>
+                                            <th style="text-align: center;">Penalty Fee </th>
+                                            <th style="text-align: center;">Poor Fund Fee </th>
+                                            <th style="text-align: center;">Pre-test </th>
+                                            <th style="text-align: center;">Registration Fee </th>
+                                            <th style="text-align: center;">Result Processing Fee </th>
+                                            <th style="text-align: center;">SMS Fee </th>
+                                            <th style="text-align: center;">Scout Fee </th>
+                                            <th style="text-align: center;">Sports Fee </th>
+                                            <th style="text-align: center;">STUDENT_DIARY_FEE</th>
+                                            <th style="text-align: center;">Syllabus Fee </th>
+                                            <th style="text-align: center;">Testimonial Fee </th>
+                                            <th style="text-align: center;">TRANSFER_CERTIFICATE_FEE</th>
+                                            <th style="text-align: center;">TUITION_FEE</th>
+                                            <th style="text-align: center;">WELFARE_FUND_FEE</th>
+                                            <th style="text-align: center;">TOTAL_AMOUNT</th>
+                                            <th style="text-align: center;">TOTAL_RECEIPT</th>
                                             <!-- <th style="text-align: center;">Channel </th>
                                             <th style="text-align: center;">Present Date </th>
                                             <th style="text-align: center;">Total Person </th>
@@ -191,13 +196,13 @@ oci_free_statement($parse);
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['REG_NO'] ?>
+                                                    <?php echo $user_row[$i]['MONTH'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['MEM_NAME'] ?>
+                                                    <?php echo $user_row[$i]['ADMISSION_FEE'] ?>
 
                                                 </td>
 
@@ -207,60 +212,170 @@ oci_free_statement($parse);
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['BATCH'] ?>
-
-                                                </td>
-
-
-                                                <td style="text-align: center;">
-
-                                                    <?php echo $user_row[$i]['MEM_MOBILE_NO'] ?>
+                                                    <?php echo $user_row[$i]['ADMISSION_FORM_FEE'] ?>
 
                                                 </td>
 
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['SECTION_NAME'] ?>
+                                                    <?php echo $user_row[$i]['ANNUAL_MAGAZINE_FEE'] ?>
+
+                                                </td>
+
+
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['AUTOMATION_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_MEM'] ?>
+                                                    <?php echo $user_row[$i]['CERTIFICATION_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_SPOUSE'] ?>
+                                                    <?php echo $user_row[$i]['CLASS_TEST_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_CHILD'] ?>
+                                                    <?php echo $user_row[$i]['DEVELOPMENT_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_DRIVER'] ?>
+                                                    <?php echo $user_row[$i]['EXAM_FEES'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['TOT_PERSON'] ?>
+                                                    <?php echo $user_row[$i]['FORM_FILL_UP_FEE'] ?>
 
                                                 </td>
-
                                                 <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['HALF_YEARLY'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['IDENTITY_CARD_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['LABORATORY_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MILAD_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MISCELLANEOUS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MONTHLY_FEE'] ?>
+
+                                                </td><td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['PENALTY_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['POOR_FUND_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['PRE_TEST_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['REGISTRATION_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['RESULT_PROCESSING_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SMS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SCOUT_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SPORTS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['STUDENT_DIARY_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SYLLABUS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TESTIMONIAL_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TRANSFER_CERTIFICATE_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TUITION_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['WELFARE_FUND_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TOTAL_AMOUNT'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TOTAL_RECEIPT'] ?>
+
+                                                </td>
+                                                
+
+                                                <!-- <td style="text-align: center;">
                                                     <a href="http://localhost:8080/social_welfare_du_demo/itbl.php?id=<?php echo ($user_row[$i]['MEM_ID']); ?>" 
                                                     class="btn btn-danger btn-sm">
                                                     Download PDF
                                                     </a>
-                                                </td>
+                                                </td> -->
 
 
                                                 
