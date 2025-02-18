@@ -41,8 +41,8 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="report_list.php">Student Wise Report </a>
-                        <a class="collapse-item" href="report_list.php">Class Wise Report </a>
+                        <a class="collapse-item" href="student_report.php">Student Wise Report </a>
+                        <a class="collapse-item" href="class_report.php">Class Wise Report </a>
                         <a class="collapse-item" href="month_report.php">Monthly Report </a>
                         <a class="collapse-item" href="yearly_report.php">Yearly Report </a>
                         
