@@ -1,41 +1,54 @@
 
 
-<?PHP
-//set_time_limit(300);
+<?php
+set_time_limit(300);
+
 include 'connection.php';
 
+$search_year = isset($_GET['search_year']) ? $_GET['search_year'] : '';
 
 
-// $sql = "SELECT *
-// FROM V_TOTAL_REG_sum";
+// **YEAR & CLASS_NAME Database Theke Fetch Kora**
+$years_query = "SELECT DISTINCT YEAR FROM MIS_STUDENT_COLLECTION ORDER BY YEAR DESC";
+$classes_query = "SELECT DISTINCT CLASS_NAME FROM MIS_CLASS_COLLECTION ORDER BY CLASS_NAME";
 
+$years_parse = oci_parse($conn, $years_query);
+$classes_parse = oci_parse($conn, $classes_query);
 
-$sql = "SELECT *
-FROM V_TOTAL_REG_02";
+oci_execute($years_parse);
+oci_execute($classes_parse);
 
-$parse = ociparse($conn, $sql);
+// **SQL Query Modify Kora Search er Jonno**
+$sql = "SELECT * FROM MIS_STUDENT_COLLECTION WHERE 1=1";
+
+if (!empty($search_year)) {
+    $sql .= " AND YEAR = :search_year";
+}
+if (!empty($search_class)) {
+    $sql .= " AND CLASS_NAME = :search_class";
+}
+
+$parse = oci_parse($conn, $sql);
+
+// **Bind Parameters**
+if (!empty($search_year)) {
+    oci_bind_by_name($parse, ':search_year', $search_year);
+}
+if (!empty($search_class)) {
+    oci_bind_by_name($parse, ':search_class', $search_class);
+}
+
 oci_execute($parse);
 
-// print_r($sql);
+// **Fetch Data**
+$user_row = [];
 while ($row = oci_fetch_assoc($parse)) {
     $user_row[] = $row;
 }
 
-// var_dump($division);
-// echo count($division);
 oci_free_statement($parse);
-
-
-
-
-// $TRX_ID =  $report_output[0]['TRX_ID'];
-// echo "$TRX_ID";
-
-
-/* End Procedure for Report */
-// $bool = true;
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -49,8 +62,8 @@ oci_free_statement($parse);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SOCIAL WELFARE ALUMNI ASSOCIATION </title>
-    <link rel="icon" href="img/social_welfare.jpg" type="image/ico">
+    <title>Bangladesh Gas Fields School & College </title>
+    <link rel="icon" href="img/bgfsclogo.jpeg" type="image/ico">
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -101,6 +114,8 @@ oci_free_statement($parse);
 
 <body id="page-top">
 
+
+
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -130,12 +145,47 @@ oci_free_statement($parse);
                             href="https://datatables.net">official DataTables documentation</a>.</p> -->
 
                     <!-- DataTales Example -->
+                    <div class="row mb-4">
+    <div class="col-md-6">
+        <form method="GET" action="">
+            <div class="input-group">
+                <!-- Year Dropdown -->
+                <select class="form-control rounded" name="search_year">
+                    <option value="">Select Year</option>
+                    <?php
+                    while ($year_row = oci_fetch_assoc($years_parse)) {
+                        $selected = ($search_year == $year_row['YEAR']) ? 'selected' : '';
+                        echo "<option value='{$year_row['YEAR']}' $selected>{$year_row['YEAR']}</option>";
+                    }
+                    oci_free_statement($years_parse);
+                    ?>
+                </select>
+
+                <!-- Class Name Dropdown -->
+                <!-- <select class="form-control ml-2 rounded" name="search_class">
+                    <option value="">Select Class</option>
+                    <?php
+                    while ($class_row = oci_fetch_assoc($classes_parse)) {
+                        $selected = ($search_class == $class_row['CLASS_NAME']) ? 'selected' : '';
+                        echo "<option value='{$class_row['CLASS_NAME']}' $selected>{$class_row['CLASS_NAME']}</option>";
+                    }
+                    oci_free_statement($classes_parse);
+                    ?>
+                </select> -->
+
+                <div class="input-group-append">
+                    <button class="btn btn-primary ml-2 rounded" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3" style="background-color: #8468F4;;">
                             <!-- <h6 class="m-0 font-weight-bold text-primary text-center m-4">Suhrawardy Hall Alumni Association, BUET</h6> -->
-                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Social Welfare Alumni Association</h4>
-                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Dhaka University</h4>
-                            <h6 class=" text-center m-4" style="color: white; font-weight: bold;">Reunion 2024</h6>
+                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Bangladesh Gas Fields School & College</h4>
+                            <h4 class=" text-center m-4" style="color: white; font-weight: bold;">Birashar, Brahmanbaria</h4>
+                            <h6 class=" text-center m-4" style="color: white; font-weight: bold;"> Student Wise Collection Report</h6>
 
                         </div>
                         <div class="card-body">
@@ -143,17 +193,69 @@ oci_free_statement($parse);
                                 <table class="table table-bordered" id="table_id" width="100%" cellspacing="0">
                                     <thead style="color: #212121;">
                                         <tr>
-                                            <th style="text-align: center;">Sl No.</th>
-                                            <th style="text-align: center;">Member Name</th>
-                                            <th style="text-align: center;">Session</th>
-                                            <th style="text-align: center;"> Mobile No</th>
-                                            <th style="text-align: center;">Degree Obtained </th>
-                                            <th style="text-align: center;">No of Member </th>
-                                            <th style="text-align: center;">No of Spouse </th>
-                                            <th style="text-align: center;">No of Childs </th>
-                                            <th style="text-align: center;">No of Driver </th>
-                                            <th style="text-align: center;">Total Person </th>
-                                            <th style="text-align: center;">action</th>
+                                            <th style="text-align: center;">Year</th>
+                                            <th style="text-align: center;">Student Id </th>
+                                            <th style="text-align: center;">Section Name </th>
+                                            <th style="text-align: center;">ROLL No </th>
+                                            <th style="text-align: center;">NAME</th>
+                                            <th style="text-align: center;">CATEGORY</th>
+                                            <th style="text-align: center;">ADMISSION_FEE</th>
+                                            <th style="text-align: center;">Admission Form Fee </th>
+                                            <th style="text-align: center;">Annual Magazine Fee </th>
+                                            <th style="text-align: center;">Automation Fee </th>
+                                            <th style="text-align: center;">Certification fee </th>
+                                            <th style="text-align: center;">Class Test Fee </th>
+                                            <th style="text-align: center;">Development Fee </th>
+                                            <th style="text-align: center;">Exam Fees </th>
+                                            <th style="text-align: center;">Form Fill-up Fee </th>
+                                            <th style="text-align: center;">Half-yearly </th>
+                                            <th style="text-align: center;">Identity Card Fee </th>
+                                            <th style="text-align: center;">Laboratory Fee </th>
+                                            <th style="text-align: center;">Milad Fee </th>
+                                            <th style="text-align: center;">Miscellaneous Fee </th>
+                                            <th style="text-align: center;">Monthly Fee </th>
+                                            <th style="text-align: center;">Penalty Fee </th>
+                                            <th style="text-align: center;">Poor Fund Fee </th>
+                                            <th style="text-align: center;">Pre-test </th>
+                                            <th style="text-align: center;">Registration Fee </th>
+                                            <th style="text-align: center;">Result Processing Fee </th>
+                                            <th style="text-align: center;">SMS Fee </th>
+                                            <th style="text-align: center;">Scout Fee </th>
+                                            <th style="text-align: center;">Sports Fee </th>
+                                            <th style="text-align: center;">STUDENT_DIARY_FEE</th>
+                                            <th style="text-align: center;">Syllabus Fee </th>
+                                            <th style="text-align: center;">Testimonial Fee </th>
+                                            <th style="text-align: center;">TRANSFER_CERTIFICATE_FEE</th>
+                                            <th style="text-align: center;">TUITION_FEE</th>
+                                            <th style="text-align: center;">WELFARE_FUND_FEE</th>
+                                            <th style="text-align: center;">STUDENT_ID1</th>
+                                            <th style="text-align: center;">JAN_TK</th>
+                                            <th style="text-align: center;">JAN_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">FEB_TK</th>
+                                            <th style="text-align: center;">FEB_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">MAR_TK</th>
+                                            <th style="text-align: center;">MAR_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">APR_TK</th>
+                                            <th style="text-align: center;">APR_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">MAY_TK</th>
+                                            <th style="text-align: center;">MAY_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">JUN_TK</th>
+                                            <th style="text-align: center;">JUN_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">JUL_TK</th>
+                                            <th style="text-align: center;">JUL_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">AUG_TK</th>
+                                            <th style="text-align: center;">AUG_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">SEP_TK</th>
+                                            <th style="text-align: center;">SEP_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">OCT_TK </th>
+                                            <th style="text-align: center;">OCT_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">NOV_TK </th>
+                                            <th style="text-align: center;">NOV_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">DEC_TK </th>
+                                            <th style="text-align: center;">DEC_RECEIVE_DATE</th>
+                                            <th style="text-align: center;">STOTAL</th>
+                                            
+
                                             <!-- <th style="text-align: center;">Channel </th>
                                             <th style="text-align: center;">Present Date </th>
                                             <th style="text-align: center;">Total Person </th>
@@ -175,76 +277,337 @@ oci_free_statement($parse);
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['REG_NO'] ?>
+                                                    <?php echo $user_row[$i]['YEAR'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['MEM_NAME'] ?>
+                                                    <?php echo $user_row[$i]['STUDENT_ID'] ?>
 
                                                 </td>
-
-
-
-
-
-                                                <td style="text-align: center;">
-
-                                                    <?php echo $user_row[$i]['BATCH'] ?>
-
-                                                </td>
-
-
-                                                <td style="text-align: center;">
-
-                                                    <?php echo $user_row[$i]['MEM_MOBILE_NO'] ?>
-
-                                                </td>
-
-
-                                                <td style="text-align: center;">
+                                                
+                                                 <td style="text-align: center;">
 
                                                     <?php echo $user_row[$i]['SECTION_NAME'] ?>
 
                                                 </td>
+                                                 <td style="text-align: center;">
 
-                                                <td style="text-align: center;">
+                                                    <?php echo $user_row[$i]['ROLL_NO'] ?>
 
-                                                    <?php echo $user_row[$i]['NO_OF_MEM'] ?>
+                                                </td>
+
+                                                 <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['NAME'] ?>
+
+                                                </td>
+
+                                                 <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['CATEGORY'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_SPOUSE'] ?>
+                                                    <?php echo $user_row[$i]['ADMISSION_FEE'] ?>
+
+                                                </td>
+
+
+
+
+
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['ADMISSION_FORM_FEE'] ?>
+
+                                                </td>
+
+
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['ANNUAL_MAGAZINE_FEE'] ?>
+
+                                                </td>
+
+
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['AUTOMATION_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_CHILD'] ?>
+                                                    <?php echo $user_row[$i]['CERTIFICATION_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['NO_OF_DRIVER'] ?>
+                                                    <?php echo $user_row[$i]['CLASS_TEST_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
 
-                                                    <?php echo $user_row[$i]['TOT_PERSON'] ?>
+                                                    <?php echo $user_row[$i]['DEVELOPMENT_FEE'] ?>
 
                                                 </td>
 
                                                 <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['EXAM_FEES'] ?>
+
+                                                </td>
+
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['FORM_FILL_UP_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['HALF_YEARLY'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['IDENTITY_CARD_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['LABORATORY_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MILAD_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MISCELLANEOUS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MONTHLY_FEE'] ?>
+
+                                                </td><td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['PENALTY_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['POOR_FUND_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['PRE_TEST_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['REGISTRATION_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['RESULT_PROCESSING_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SMS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SCOUT_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SPORTS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['STUDENT_DIARY_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SYLLABUS_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TESTIMONIAL_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TRANSFER_CERTIFICATE_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['TUITION_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['WELFARE_FUND_FEE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['STUDENT_ID1'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['JAN_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['JAN_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['FEB_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['FEB_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MAR_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MAR_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['APR_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['APR_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MAY_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['MAY_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['JUN_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['JUN_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['JUL_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['JUL_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['AUG_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['AUG_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SEP_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['SEP_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['OCT_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['OCT_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['NOV_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['NOV_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['DEC_TK'] ?>
+
+                                                </td>
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['DEC_RECEIVE_DATE'] ?>
+
+                                                </td>
+                                                
+
+                                                <td style="text-align: center;">
+
+                                                    <?php echo $user_row[$i]['STOTAL'] ?>
+
+                                                </td>
+                                                
+
+                                                <!-- <td style="text-align: center;">
                                                     <a href="http://localhost:8080/social_welfare_du_demo/itbl.php?id=<?php echo ($user_row[$i]['MEM_ID']); ?>" 
                                                     class="btn btn-danger btn-sm">
                                                     Download PDF
                                                     </a>
-                                                </td>
+                                                </td> -->
 
 
                                                 
@@ -324,15 +687,53 @@ oci_free_statement($parse);
 
 
     <script>
-        $(document).ready(function() {
-            $('#table_id').DataTable({
-                dom: 'lBfrtip',
-                buttons: [
-                    'excel'
-                ]
-            });
+    $(document).ready(function() {
+        $('#table_id').DataTable({
+            dom: 'lBfrtip',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export to Excel',
+                    title: function() {
+                        // Get selected year and class
+                        var year = $('select[name="search_year"]').val();
+                        var className = $('select[name="search_class"]').val();
+
+                        // Return the formatted title
+                        return 'Report For ' + (year ? 'Year: ' + year + ' ' : '') + (className ? 'Class: ' + className : '');
+                    },
+                    customize: function(xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        var $sheet = $(sheet);
+
+                        // Get the year and class name
+                        var year = $('select[name="search_year"]').val();
+                        var className = $('select[name="search_class"]').val();
+                        var headerText = 'Report For ' + (year ? 'Year: ' + year + ' ' : '') + (className ? 'Class: ' + className : '');
+
+                        // Find or create the F2 cell
+                        var row = $sheet.find('row').eq(1); // Second row (index starts at 0)
+                        var cell = row.find('c[r=""]');
+
+                        if (cell.length === 0) {
+                            // Create a new cell if F2 does not exist
+                            var newCell = $('<c r="F2" t="inlineStr"><is><t></t></is></c>');
+                            row.append(newCell);
+                            cell = newCell;
+                        }
+
+                        // Set the text inside the cell
+                        cell.find('t').text(headerText);
+
+                        // Apply Excel style for bold and center alignment
+                        cell.attr('s', '64');
+                    }
+                }
+            ]
         });
-    </script>
+    });
+</script>
+
 
 </body>
 
