@@ -18,7 +18,7 @@
                 $_SESSION['user']=$user_row['USER_NAME'];
                 //$id = $_SESSION['id'];
         
-                header('Location:dashboard.php');
+                header('Location:dashboard-info.php');
             }
          }
         
